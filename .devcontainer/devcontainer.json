@@ -1,0 +1,40 @@
+{
+    "name": "Fabric Certificate System",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "latest",
+            "dockerDashComposeVersion": "v2"
+        },
+        "ghcr.io/devcontainers/features/go:1": {
+            "version": "1.22"
+        },
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "18"
+        },
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshCompletions": true,
+            "username": "vscode"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.go",
+                "ms-azuretools.vscode-docker",
+                "redhat.vscode-yaml"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+    "postCreateCommand": "chmod +x setup_and_run_all.sh setup_network.sh caliper-workspace/fix_and_run_caliper.sh && chmod -R +x test-network/",
+    "remoteUser": "vscode",
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "8gb",
+        "storage": "32gb"
+    }
+}

@@ -1,4 +1,4 @@
-name: Caliper Test
+name: Fabric Certificate Benchmark
 version: "2.0.0"
 caliper:
   blockchain: fabric
@@ -12,9 +12,9 @@ organizations:
       certificates:
         - name: 'User1'
           clientPrivateKey:
-            path: '/workspaces/fabric_certificate_MT/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/REPLACE_WITH_ACTUAL_KEY_FILE'
+            path: 'REPLACE_WITH_KEY_PATH'
           clientSignedCert:
-            path: '/workspaces/fabric_certificate_MT/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem'
+            path: 'REPLACE_WITH_CERT_PATH'
     connectionProfile:
       path: 'networks/connection-org1.yaml'
       discover: false
