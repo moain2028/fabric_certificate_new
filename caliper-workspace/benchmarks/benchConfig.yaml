@@ -1,46 +1,46 @@
 test:
   name: certificate-benchmark-test
-  description: Test issuing, verifying, and revoking certificates.
+  description: Benchmark for issuing, verifying, querying, and revoking certificates on Hyperledger Fabric.
   workers:
     type: local
-    number: 2
+    number: 1
   rounds:
     - label: Issue Certificates
       description: Issuing new certificates (using CreateAsset).
-      txNumber: 30
+      txDuration: 30
       rateControl:
-        type: fixed-load
+        type: fixed-rate
         opts:
-          transactionLoad: 2
+          tps: 10
       workload:
         module: workload/issueCertificate.js
 
     - label: Verify a Certificate
       description: Verifying certificates exist (using ReadAsset).
-      txNumber: 30
+      txDuration: 15
       rateControl:
-        type: fixed-load
+        type: fixed-rate
         opts:
-          transactionLoad: 2
+          tps: 30
       workload:
         module: workload/verifyCertificate.js
 
     - label: Query All Certificates
       description: Browsing all certificates (using GetAllAssets).
-      txNumber: 10
+      txDuration: 15
       rateControl:
-        type: fixed-load
+        type: fixed-rate
         opts:
-          transactionLoad: 1
+          tps: 10
       workload:
         module: workload/queryAllCertificates.js
 
     - label: Revoke Certificate
       description: Revoking/Deleting certificates (using DeleteAsset).
-      txNumber: 30
+      txDuration: 15
       rateControl:
-        type: fixed-load
+        type: fixed-rate
         opts:
-          transactionLoad: 2
+          tps: 10
       workload:
         module: workload/revokeCertificate.js

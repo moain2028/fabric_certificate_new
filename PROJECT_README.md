@@ -1,131 +1,155 @@
-# 🎓 نظام إدارة وتوثيق الشهادات الأكاديمية باستخدام البلوك تشين (BCMS)
+# Blockchain Certificate Management System (BCMS)
 
 **A Hyperledger Fabric & Go Implementation with Caliper Benchmarking**
 
 ---
 
-## 📖 1. تعريف وشرح المشروع (Project Description)
+## 1. Project Description
 
-هذا المشروع عبارة عن نظام لامركزي آمن يهدف إلى **إصدار، إدارة، وحماية الشهادات الجامعية** من التزوير باستخدام تقنية **Hyperledger Fabric**. يعتمد النظام على **عقد ذكي (Smart Contract)** مكتوب بلغة **Go** لضمان سرعة الأداء وكفاءة التحقق. كما يتضمن المشروع اختبارات أداء شاملة باستخدام أداة **Hyperledger Caliper** لقياس قدرة الشبكة على معالجة المعاملات (TPS) وزمن الاستجابة (Latency).
-
-> This project creates a tamper-proof ecosystem for academic certificates using Blockchain technology. It allows universities to issue digital certificates that can be instantly verified globally, ensuring trust and integrity.
+This is a decentralized, secure system for **issuing, managing, and protecting academic certificates** from forgery using **Hyperledger Fabric** technology. The system relies on a **Smart Contract** written in **Go** for high performance and verification efficiency. The project also includes comprehensive performance tests using **Hyperledger Caliper**.
 
 ---
 
-## 🏗️ 2. مكونات النظام وهيكليته (System Architecture)
+## 2. System Architecture
 
-يتكون المشروع من العناصر التقنية التالية:
-
-| المكون (Component) | التفاصيل (Details) |
+| Component | Details |
 | :--- | :--- |
-| **Blockchain Network** | **Hyperledger Fabric v2.5** (Latest Stable Version). |
-| **Consensus Algorithm** | **Raft** (EtcdRaft) - لضمان توافق الشبكة وترتيب المعاملات. |
-| **Organizations** | **2 Organizations (Org1, Org2)** + **1 Orderer Service**. |
-| **Smart Contract** | مكتوب بلغة **Golang (Go)** لضمان أداء عالٍ (High Performance). |
-| **Benchmarking Tool** | **Hyperledger Caliper** (لقياس السرعة والضغط). |
-| **Database** | **CouchDB / LevelDB** (لتخزين الحالة الحالية للشهادات). |
+| **Blockchain Network** | **Hyperledger Fabric v2.5** (Latest Stable) |
+| **Consensus** | **Raft** (EtcdRaft) |
+| **Organizations** | **2 Organizations (Org1, Org2)** + **1 Orderer** |
+| **Smart Contract** | **Golang (Go)** - asset-transfer-basic |
+| **Benchmarking** | **Hyperledger Caliper 0.6.0** |
+| **Database** | **LevelDB** (default) |
 
-### 🗺️ المخطط الهيكلي للمشروع (Project Structure Map)
+### Smart Contract Functions
 
-![Project Structure](project_structure.png)
-
----
-
-## 📁 3. شرح الملفات والمجلدات الرئيسية
-
-هذا الجدول يوضح وظيفة كل ملف ومجلد رئيسي في المشروع:
-
-| المسار (Path) | الوصف (Description) |
+| Function | Description |
 | :--- | :--- |
-| **`setup_and_run_all.sh`** | 🚀 **السكربت الشامل**: يقوم بأتمتة العملية بأكملها: تحميل أدوات Fabric، تشغيل الشبكة، نشر العقد الذكي (Go)، وتشغيل اختبار Caliper. |
-| `test-network/` | 🌐 **مجلد الشبكة**: يحتوي على إعدادات شبكة Hyperledger Fabric الأساسية المأخوذة من `fabric-samples`. |
-| `test-network/network.sh` | ⚙️ **مدير الشبكة**: سكربت لإدارة شبكة Fabric (up, down, createChannel, deployCC). |
-| `asset-transfer-basic/` | 📜 **مجلد العقود الذكية**: يحتوي على العقد الذكي (chaincode) بلغات متعددة. |
-| `asset-transfer-basic/chaincode-go/` | ✅ **العقد الذكي Go**: نسخة Go من العقد الذكي، وهي المستخدمة حالياً في المشروع. |
-| `caliper-workspace/` | ⚡ **مجلد اختبار الأداء**: البيئة المخصصة لاختبارات الأداء باستخدام Hyperledger Caliper. |
-| `caliper-workspace/fix_and_run_caliper.sh` | 🔧 **سكربت إصلاح Caliper**: سكربت متخصص لإصلاح مشاكل Caliper الشائعة وتشغيل الاختبارات. |
-| `caliper-workspace/benchmarks/` | 📊 **إعدادات الاختبار**: يحتوي على ملف `benchConfig.yaml` الذي يحدد جولات الاختبار (مثل issue, verify, revoke). |
-| `caliper-workspace/workload/` |  сценарии **سيناريوهات الاختبار**: يحتوي على ملفات JavaScript التي تحدد منطق كل معاملة اختبار. |
-| `caliper-workspace/report.html` | 📈 **التقرير النهائي**: تقرير الأداء النهائي بصيغة HTML الذي يتم إنشاؤه بواسطة Caliper. |
-| `PROJECT_README.md` | 📖 **التوثيق الرئيسي**: ملف توثيق شامل للمشروع. |
+| `CreateAsset` | Issue a new certificate (ID, Color, Size, Owner, AppraisedValue) |
+| `ReadAsset` | Verify/Read a certificate by ID |
+| `GetAllAssets` | Query all certificates |
+| `DeleteAsset` | Revoke/Delete a certificate |
+| `UpdateAsset` | Update certificate details |
+| `TransferAsset` | Transfer certificate ownership |
+| `InitLedger` | Initialize with sample data |
 
 ---
 
-## 🚀 4. دليل التشغيل السريع (How to Run)
+## 3. Quick Start Guide
 
-تم تصميم هذا المشروع ليعمل بـ **أمر واحد فقط** (One-Click Setup) بفضل سكربت الأتمتة المرفق.
+### Option A: GitHub Codespaces (Recommended - Cloud)
 
-### 🅰️ الخيار الأول: التشغيل عبر GitHub Codespaces (سحابياً)
-
-وهي الطريقة الأسهل والأسرع (لا تتطلب تثبيت برامج على جهازك).
-
-1.  قم بفتح المستودع (Repository) في **GitHub Codespaces**.
-2.  افتح نافذة التيرمينال (Terminal).
-3.  اكتب الأمر التالي واضغط Enter:
+1. Click **"Code"** > **"Create codespace on main"** on the GitHub repo page
+2. Wait for the Codespace to build (~2-3 minutes)
+3. Open the Terminal and run:
 
 ```bash
 chmod +x setup_and_run_all.sh
 ./setup_and_run_all.sh
 ```
 
-**ماذا سيحدث؟**
-- سيقوم السكربت بتحميل أدوات Fabric تلقائياً.
-- سيقوم بتشغيل الشبكة ونشر العقد الذكي.
-- سيقوم بتثبيت وتشغيل اختبارات Caliper.
-- **النتيجة**: بعد 5-8 دقائق، سيظهر لك تقرير النجاح.
+**What happens:**
+- Downloads Fabric binaries & Docker images (~3 min first time)
+- Starts Fabric network with 2 orgs + orderer + CA
+- Deploys Go smart contract
+- Initializes ledger with sample data
+- Runs Caliper benchmarks (4 rounds)
+- Generates HTML report
 
-### 🅱️ الخيار الثاني: التشغيل على سطح المكتب (Locally)
+**Total time: ~8-12 minutes on first run**
 
-إذا أردت تشغيله على جهازك الشخصي (Linux / macOS / WSL2 on Windows)، يجب توفر المتطلبات التالية:
+### Option B: Local Machine (Linux / macOS / WSL2)
 
-1.  **المتطلبات المسبقة (Prerequisites):**
-    - **Docker Desktop**: (يجب أن يكون يعمل).
-    - **Go Language**: (v1.19 أو أحدث).
-    - **Node.js**: (v16 أو v18).
-    - **cURL & Git**.
+**Prerequisites:**
+- Docker Desktop (running)
+- Go 1.19+
+- Node.js 18+
+- Git & cURL
 
-2.  **خطوات التشغيل:**
-    أ) انسخ المشروع إلى جهازك:
-    ```bash
-    git clone https://github.com/MoainAlabbasi/fabric_certificate_MT.git
-    cd fabric_certificate_MT
-    ```
-    ب) امنح صلاحيات التنفيذ للسكربت:
-    ```bash
-    chmod +x setup_and_run_all.sh
-    chmod -R +x test-network/
-    ```
-    ج) شغّل السكربت الشامل:
-    ```bash
-    ./setup_and_run_all.sh
-    ```
+```bash
+# Clone
+git clone https://github.com/moain2028/fabric_certificate_new.git
+cd fabric_certificate_new
 
----
+# Run
+chmod +x setup_and_run_all.sh
+./setup_and_run_all.sh
+```
 
-## 📊 5. تقرير الأداء (Benchmarks)
+### Option C: Step-by-Step Manual
 
-بعد انتهاء التشغيل، يقوم النظام بتوليد تقرير احترافي يوضح كفاءة الشبكة في المسار التالي: `caliper-workspace/report.html`
+```bash
+# Step 1: Download Fabric
+curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.5.9 1.5.7
+export PATH=$PWD/bin:$PATH
 
-يتضمن التقرير اختبار 4 مراحل:
+# Step 2: Start network
+cd test-network
+./network.sh down
+./network.sh up createChannel -c mychannel -ca
 
-- ✅ **Issue Certificates**: قياس سرعة إصدار الشهادات.
-- ✅ **Verify Certificate**: قياس سرعة التحقق (القراءة).
-- ✅ **Query All**: قياس سرعة جلب البيانات الضخمة.
-- ✅ **Revoke Certificate**: قياس سرعة الحذف من السجل.
+# Step 3: Deploy chaincode
+./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-go -ccl go
 
----
-
-## 👨‍💻 إعداد وتطوير (Credits)
-
-تم تصميم وتطوير هذا المشروع بواسطة:
-
-**المهندس / معين العباسي (Eng. Moain Al-Abbasi)**
-
-- **GitHub:** [MoainAlabbasi](https://github.com/MoainAlabbasi)
-- **Project:** Graduation Project - Blockchain Security Systems.
+# Step 4: Run Caliper
+cd ../caliper-workspace
+./fix_and_run_caliper.sh
+```
 
 ---
 
-## 📄 الترخيص (License)
+## 4. Benchmark Results
+
+After completion, the report is generated at: `caliper-workspace/report.html`
+
+The benchmark tests 4 phases:
+- **Issue Certificates**: Measures certificate creation throughput (TPS)
+- **Verify Certificate**: Measures read/verification latency
+- **Query All**: Measures bulk data retrieval performance
+- **Revoke Certificate**: Measures deletion throughput
+
+---
+
+## 5. Project Structure
+
+| Path | Description |
+| :--- | :--- |
+| `setup_and_run_all.sh` | Full automation script |
+| `setup_network.sh` | Quick network setup only |
+| `test-network/` | Fabric network configuration |
+| `asset-transfer-basic/chaincode-go/` | Go smart contract |
+| `caliper-workspace/` | Caliper benchmarking workspace |
+| `caliper-workspace/fix_and_run_caliper.sh` | Caliper fix & run script |
+| `caliper-workspace/workload/` | Benchmark workload modules |
+| `caliper-workspace/benchmarks/` | Benchmark configuration |
+| `caliper-workspace/report.html` | Generated performance report |
+| `.devcontainer/` | Codespaces configuration |
+
+---
+
+## 6. Troubleshooting
+
+### Common Issues
+
+| Issue | Solution |
+| :--- | :--- |
+| Docker not running | Start Docker Desktop first |
+| Permission denied | `chmod -R +x test-network/ && chmod +x *.sh` |
+| Port already in use | `cd test-network && ./network.sh down` |
+| Caliper fails | Run `cd caliper-workspace && ./fix_and_run_caliper.sh` |
+
+### Clean Restart
+
+```bash
+cd test-network
+./network.sh down
+docker system prune -f
+cd ..
+./setup_and_run_all.sh
+```
+
+---
+
+## License
 
 This project is licensed under the **Apache-2.0 License**.
